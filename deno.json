@@ -1,0 +1,10 @@
+{
+  "importMap": "./deps.json",
+  "tasks": {
+    "dev": "deno run --watch --allow-read --allow-env --allow-net src/main.ts",
+    "test": "deno run --allow-net tests/mock_server/server.ts & sleep 1 && deno test --allow-net && exit"
+  },
+  "fmt": {
+    "lineWidth": 100
+  }
+}
