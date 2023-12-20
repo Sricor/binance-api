@@ -54,7 +54,7 @@ export class TradingDay implements BinanceHttpApi<TradingDayFullResponse[], Erro
 export class Price implements BinanceHttpApi<PriceResponse[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: TradingDayParams) {
+  public async request(params?: SymbolsParams) {
     type Response = PriceResponse[];
     return await this.client.process<Response>(
       await this.client.get({
@@ -71,7 +71,7 @@ export class Price implements BinanceHttpApi<PriceResponse[], Error> {
 export class BookTicker implements BinanceHttpApi<BookTickerResponse[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: TradingDayParams) {
+  public async request(params?: SymbolsParams) {
     type Response = BookTickerResponse[];
     return await this.client.process<Response>(
       await this.client.get({
