@@ -8,9 +8,9 @@ import type {
 
 // deno-fmt-ignore
 enum API {
-  Price            =  `/api/v3/ticker/price`,
   Klines           =  `/api/v3/klines`,
   AvgPrice         =  `/api/v3/avgPrice`,
+  Price            =  `/api/v3/ticker/price`,
   BookTicker       =  `/api/v3/ticker/bookTicker`,
   TradingDay       =  `/api/v3/ticker/tradingDay`,
   RoundPriceChange =  `/api/v3/ticker/24hr`,
@@ -139,19 +139,21 @@ interface BookTickerRequest {
   symbols?: string[] | CoinSymbols;
 }
 
-interface RoundPriceChangeRequest {
-  symbols?: string[] | CoinSymbols;
-  type?: string | ResponseType;
-}
-
-interface TradingDayRequest {
-  symbols?: string[] | CoinSymbols;
-  type?: string | ResponseType;
-  timeZone?: string;
-}
-
 interface AvgPriceRequest {
   symbol: CoinSymbol;
+}
+
+// deno-fmt-ignore
+interface RoundPriceChangeRequest {
+  symbols?: string[] | CoinSymbols;
+  type?:    string   | ResponseType;
+}
+
+// deno-fmt-ignore
+interface TradingDayRequest {
+  symbols?:  string[] | CoinSymbols;
+  type?:     string   | ResponseType;
+  timeZone?: string;
 }
 
 // deno-fmt-ignore
@@ -164,42 +166,46 @@ interface KlineRequest {
   limit?:     number;
 }
 
+// deno-fmt-ignore
 interface TickerData {
-  symbol: CoinSymbol;
-  openPrice: string;
-  highPrice: string;
-  lowPrice: string;
-  lastPrice: string;
-  volume: string;
+  symbol:      CoinSymbol;
+  openPrice:   string;
+  highPrice:   string;
+  lowPrice:    string;
+  lastPrice:   string;
+  volume:      string;
   quoteVolume: string;
-  openTime: number;
-  closeTime: number;
-  firstId: number;
-  lastId: number;
-  count: number;
+  openTime:    number;
+  closeTime:   number;
+  firstId:     number;
+  lastId:      number;
+  count:       number;
 }
 
+// deno-fmt-ignore
 interface RoundPriceChangeFullData extends TickerData {
-  priceChange: string;
+  priceChange:        string;
   priceChangePercent: string;
-  weightedAvgPrice: string;
-  prevClosePrice: string;
-  lastQty: string;
-  bidPrice: string;
-  bidQty: string;
-  askPrice: string;
-  askQty: string;
+  weightedAvgPrice:   string;
+  prevClosePrice:     string;
+  lastQty:            string;
+  bidPrice:           string;
+  bidQty:             string;
+  askPrice:           string;
+  askQty:             string;
 }
 
+// deno-fmt-ignore
 interface TradingDayFullData extends TickerData {
-  priceChange: string;
+  priceChange:        string;
   priceChangePercent: string;
-  weightedAvgPrice: string;
+  weightedAvgPrice:   string;
 }
 
+// deno-fmt-ignore
 interface PriceData {
   symbol: CoinSymbol;
-  price: string;
+  price:  string;
 }
 
 // deno-fmt-ignore
