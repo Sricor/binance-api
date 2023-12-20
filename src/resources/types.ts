@@ -27,7 +27,7 @@ export interface HttpClient {
 }
 
 export interface HttpApi<T, Error> {
-  request(): Promise<Result<T, Error>>;
+  request(req: object): Promise<Result<T, Error>>;
 }
 
 export interface BinanceHttpClient extends HttpClient {

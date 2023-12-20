@@ -12,6 +12,8 @@ export class Binance extends BinanceHttpClient {
       tradingDay: new API.TradingDay(this),
       price: new API.Price(this),
       bookTicker: new API.BookTicker(this),
+      klines: new API.Klines(this),
+      avgPrice: new API.AvgPrice(this)
     },
   };
 

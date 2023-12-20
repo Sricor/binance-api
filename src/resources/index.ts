@@ -1,1 +1,8 @@
-export { BookTicker, Price, RoundPriceChange, TradingDay } from "@resources/market/ticker.ts";
+export { 
+    BookTicker, 
+    Price, 
+    RoundPriceChange, 
+    TradingDay,
+    Klines,
+    AvgPrice
+} from "@resources/market/ticker.ts";
