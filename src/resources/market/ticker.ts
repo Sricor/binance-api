@@ -102,7 +102,7 @@ export class Klines implements BinanceHttpApi<KlineData[], Error> {
           startTime: params.startTime?.toString() || "",
           endTime: params.endTime?.toString() || "",
           timeZone: params.timeZone?.toString() || "",
-          limit: params.limit?.toString() || ""
+          limit: params.limit?.toString() || "",
         },
       }),
     );
@@ -113,13 +113,13 @@ export class Klines implements BinanceHttpApi<KlineData[], Error> {
 export class AvgPrice implements BinanceHttpApi<AvgPriceData, Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params: {symbol: CoinSymbol}) {
+  public async request(params: { symbol: CoinSymbol }) {
     type Response = AvgPriceData;
     return await this.client.process<Response>(
       await this.client.get({
         path: API.AvgPrice,
         params: {
-          symbol: params.symbol
+          symbol: params.symbol,
         },
       }),
     );
@@ -226,8 +226,6 @@ interface KlineRequest {
   limit?:     number;
 }
 
-
-
 // deno-fmt-ignore
 type KlineData = [
   number,   // Kline open time
@@ -243,4 +241,3 @@ type KlineData = [
   string,   // Taker buy quote asset volume
   string    // Unused field. Ignore.
 ];
-
