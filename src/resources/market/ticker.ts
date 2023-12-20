@@ -181,12 +181,13 @@ interface PriceResponse {
   price: string;
 }
 
+// deno-fmt-ignore
 interface BookTickerResponse {
-  symbol: CoinSymbol;
+  symbol:   CoinSymbol;
   bidPrice: string;
-  bidQty: string;
+  bidQty:   string;
   askPrice: string;
-  askQty: string;
+  askQty:   string;
 }
 
 // deno-fmt-ignore

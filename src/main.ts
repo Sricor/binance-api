@@ -6,14 +6,15 @@ interface BinanceConfig {
 }
 
 export class Binance extends BinanceHttpClient {
+  // deno-fmt-ignore
   api = {
-    ticker: {
+    market: {
+      price:            new API.Price(this),
+      klines:           new API.Klines(this),
+      avgPrice:         new API.AvgPrice(this),
+      tradingDay:       new API.TradingDay(this),
+      bookTicker:       new API.BookTicker(this),
       roundPriceChange: new API.RoundPriceChange(this),
-      tradingDay: new API.TradingDay(this),
-      price: new API.Price(this),
-      bookTicker: new API.BookTicker(this),
-      klines: new API.Klines(this),
-      avgPrice: new API.AvgPrice(this),
     },
   };
 
