@@ -8,20 +8,20 @@ import type {
 
 // deno-fmt-ignore
 enum API {
-  RoundPriceChange =  `/api/v3/ticker/24hr`,
-  TradingDay       =  `/api/v3/ticker/tradingDay`,
   Price            =  `/api/v3/ticker/price`,
-  BookTicker       =  `/api/v3/ticker/bookTicker`,
   Klines           =  `/api/v3/klines`,
-  AvgPrice         =  `/api/v3/avgPrice`
+  AvgPrice         =  `/api/v3/avgPrice`,
+  BookTicker       =  `/api/v3/ticker/bookTicker`,
+  TradingDay       =  `/api/v3/ticker/tradingDay`,
+  RoundPriceChange =  `/api/v3/ticker/24hr`,
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics
-export class RoundPriceChange implements BinanceHttpApi<RoundPriceChangeFullResponse[], Error> {
+export class RoundPriceChange implements BinanceHttpApi<RoundPriceChangeFullData[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: RoundPriceChangeParams) {
-    type Response = RoundPriceChangeFullResponse[];
+  public async request(params?: RoundPriceChangeRequest) {
+    type Response = RoundPriceChangeFullData[];
     return await this.client.process<Response>(
       await this.client.get({
         path: API.RoundPriceChange,
@@ -35,11 +35,11 @@ export class RoundPriceChange implements BinanceHttpApi<RoundPriceChangeFullResp
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#trading-day-ticker
-export class TradingDay implements BinanceHttpApi<TradingDayFullResponse[], Error> {
+export class TradingDay implements BinanceHttpApi<TradingDayFullData[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: TradingDayParams) {
-    type Response = TradingDayFullResponse[];
+  public async request(params?: TradingDayRequest) {
+    type Response = TradingDayFullData[];
     return await this.client.process<Response>(
       await this.client.get({
         path: API.TradingDay,
@@ -54,11 +54,11 @@ export class TradingDay implements BinanceHttpApi<TradingDayFullResponse[], Erro
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
-export class Price implements BinanceHttpApi<PriceResponse[], Error> {
+export class Price implements BinanceHttpApi<PriceData[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: SymbolsParams) {
-    type Response = PriceResponse[];
+  public async request(params?: PriceRequest) {
+    type Response = PriceData[];
     return await this.client.process<Response>(
       await this.client.get({
         path: API.Price,
@@ -71,11 +71,11 @@ export class Price implements BinanceHttpApi<PriceResponse[], Error> {
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
-export class BookTicker implements BinanceHttpApi<BookTickerResponse[], Error> {
+export class BookTicker implements BinanceHttpApi<BookTickerData[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params?: SymbolsParams) {
-    type Response = BookTickerResponse[];
+  public async request(params?: BookTickerRequest) {
+    type Response = BookTickerData[];
     return await this.client.process<Response>(
       await this.client.get({
         path: API.BookTicker,
@@ -113,7 +113,7 @@ export class Klines implements BinanceHttpApi<KlineData[], Error> {
 export class AvgPrice implements BinanceHttpApi<AvgPriceData, Error> {
   constructor(protected client: BinanceHttpClient) {}
 
-  public async request(params: { symbol: CoinSymbol }) {
+  public async request(params: AvgPriceRequest) {
     type Response = AvgPriceData;
     return await this.client.process<Response>(
       await this.client.get({
@@ -131,19 +131,40 @@ enum ResponseType {
   Mini = "MINI",
 }
 
-interface SymbolsParams {
-  symbols?: CoinSymbols;
+interface PriceRequest {
+  symbols?: string[] | CoinSymbols;
 }
 
-interface RoundPriceChangeParams extends SymbolsParams {
+interface BookTickerRequest {
+  symbols?: string[] | CoinSymbols;
+}
+
+interface RoundPriceChangeRequest {
+  symbols?: string[] | CoinSymbols;
   type?: string | ResponseType;
 }
 
-interface TradingDayParams extends RoundPriceChangeParams {
+interface TradingDayRequest {
+  symbols?: string[] | CoinSymbols;
+  type?: string | ResponseType;
   timeZone?: string;
 }
 
-interface TickerResponse {
+interface AvgPriceRequest {
+  symbol: CoinSymbol;
+}
+
+// deno-fmt-ignore
+interface KlineRequest {
+  symbol:     string | CoinSymbol; 
+  interval:   string | Interval;
+  startTime?: number;     
+  endTime?:   number;
+  timeZone?:  string;
+  limit?:     number;
+}
+
+interface TickerData {
   symbol: CoinSymbol;
   openPrice: string;
   highPrice: string;
@@ -158,7 +179,7 @@ interface TickerResponse {
   count: number;
 }
 
-interface RoundPriceChangeFullResponse extends TickerResponse {
+interface RoundPriceChangeFullData extends TickerData {
   priceChange: string;
   priceChangePercent: string;
   weightedAvgPrice: string;
@@ -170,19 +191,19 @@ interface RoundPriceChangeFullResponse extends TickerResponse {
   askQty: string;
 }
 
-interface TradingDayFullResponse extends TickerResponse {
+interface TradingDayFullData extends TickerData {
   priceChange: string;
   priceChangePercent: string;
   weightedAvgPrice: string;
 }
 
-interface PriceResponse {
+interface PriceData {
   symbol: CoinSymbol;
   price: string;
 }
 
 // deno-fmt-ignore
-interface BookTickerResponse {
+interface BookTickerData {
   symbol:   CoinSymbol;
   bidPrice: string;
   bidQty:   string;
@@ -215,16 +236,6 @@ const enum Interval {
   threeDays      = "3d",
   oneWeek        = "1w",
   oneMonth       = "1M"
-}
-
-// deno-fmt-ignore
-interface KlineRequest {
-  symbol:     string | CoinSymbol; 
-  interval:   string | Interval;
-  startTime?: number;     
-  endTime?:   number;
-  timeZone?:  string;
-  limit?:     number;
 }
 
 // deno-fmt-ignore
