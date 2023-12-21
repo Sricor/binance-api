@@ -5,4 +5,12 @@ export {
   Price,
   RoundPriceChange,
   TradingDay,
-} from "@resources/market/ticker.ts";
+} from "@resources/api/market.ts";
+
+export {
+  DepositHistory,
+  FundingAsset,
+  UserAsset,
+  WalletBalance,
+  WithdrawHistory,
+} from "@resources/api/wallet.ts";

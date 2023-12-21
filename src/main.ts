@@ -16,6 +16,13 @@ export class Binance extends BinanceHttpClient {
       bookTicker:       new API.BookTicker(this),
       roundPriceChange: new API.RoundPriceChange(this),
     },
+    wallet: {
+      userAsset:        new API.UserAsset(this),
+      fundingAsset:     new API.FundingAsset(this),
+      walletBalance:    new API.WalletBalance(this),
+      depositHistory:   new API.DepositHistory(this),
+      withdrawHistory:  new API.WithdrawHistory(this),
+    }
   };
 
   constructor(config?: BinanceConfig) {

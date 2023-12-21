@@ -1,13 +1,8 @@
-import type {
-  BinanceHttpApi,
-  BinanceHttpClient,
-  CoinSymbol,
-  CoinSymbols,
-  Error,
-} from "../types.ts";
+import type { BinanceHttpApi, BinanceHttpClient, Error } from "../types.ts";
+import type { CoinSymbol, Interval } from "./types.ts";
 
 // deno-fmt-ignore
-enum API {
+const enum API {
   Klines           =  `/api/v3/klines`,
   AvgPrice         =  `/api/v3/avgPrice`,
   Price            =  `/api/v3/ticker/price`,
@@ -23,13 +18,10 @@ export class RoundPriceChange implements BinanceHttpApi<RoundPriceChangeFullData
   public async request(params?: RoundPriceChangeRequest) {
     type Response = RoundPriceChangeFullData[];
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.RoundPriceChange,
-        params: {
-          symbols: params?.symbols ? JSON.stringify(params.symbols) : "",
-          type: params?.type || "",
-        },
-      }),
+      await this.client.request(
+        `${API.RoundPriceChange}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
@@ -41,14 +33,10 @@ export class TradingDay implements BinanceHttpApi<TradingDayFullData[], Error> {
   public async request(params?: TradingDayRequest) {
     type Response = TradingDayFullData[];
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.TradingDay,
-        params: {
-          symbols: params?.symbols ? JSON.stringify(params.symbols) : "",
-          timeZone: params?.timeZone || "",
-          type: params?.type || "",
-        },
-      }),
+      await this.client.request(
+        `${API.TradingDay}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
@@ -60,12 +48,10 @@ export class Price implements BinanceHttpApi<PriceData[], Error> {
   public async request(params?: PriceRequest) {
     type Response = PriceData[];
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.Price,
-        params: {
-          symbols: params?.symbols ? JSON.stringify(params.symbols) : "",
-        },
-      }),
+      await this.client.request(
+        `${API.Price}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
@@ -77,82 +63,71 @@ export class BookTicker implements BinanceHttpApi<BookTickerData[], Error> {
   public async request(params?: BookTickerRequest) {
     type Response = BookTickerData[];
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.BookTicker,
-        params: {
-          symbols: params?.symbols ? JSON.stringify(params.symbols) : "",
-        },
-      }),
+      await this.client.request(
+        `${API.BookTicker}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
 
-// https://binance-docs.github.io/apidocs/spot/en/#uiklines
+// https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
 export class Klines implements BinanceHttpApi<KlineData[], Error> {
   constructor(protected client: BinanceHttpClient) {}
 
   public async request(params: KlineRequest) {
     type Response = KlineData[];
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.Klines,
-        params: {
-          symbol: params.symbol,
-          interval: params.interval,
-          startTime: params.startTime?.toString() || "",
-          endTime: params.endTime?.toString() || "",
-          timeZone: params.timeZone?.toString() || "",
-          limit: params.limit?.toString() || "",
-        },
-      }),
+      await this.client.request(
+        `${API.Klines}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
 
-// https://binance-docs.github.io/apidocs/spot/en/#uiklines
+// https://binance-docs.github.io/apidocs/spot/en/#current-average-price
 export class AvgPrice implements BinanceHttpApi<AvgPriceData, Error> {
   constructor(protected client: BinanceHttpClient) {}
 
   public async request(params: AvgPriceRequest) {
     type Response = AvgPriceData;
     return await this.client.process<Response>(
-      await this.client.get({
-        path: API.AvgPrice,
-        params: {
-          symbol: params.symbol,
-        },
-      }),
+      await this.client.request(
+        `${API.AvgPrice}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+      ),
     );
   }
 }
 
-enum ResponseType {
+const enum ResponseType {
   Full = "FULL",
   Mini = "MINI",
-}
-
-interface PriceRequest {
-  symbols?: string[] | CoinSymbols;
-}
-
-interface BookTickerRequest {
-  symbols?: string[] | CoinSymbols;
 }
 
 interface AvgPriceRequest {
   symbol: CoinSymbol;
 }
 
+interface PriceRequest {
+  symbol?: string | CoinSymbol;
+}
+
+interface BookTickerRequest {
+  symbol?: string | CoinSymbol;
+}
+
 // deno-fmt-ignore
 interface RoundPriceChangeRequest {
-  symbols?: string[] | CoinSymbols;
-  type?:    string   | ResponseType;
+  symbol?:  string  |  CoinSymbol;
+  type?:    string  |  ResponseType;
 }
 
 // deno-fmt-ignore
 interface TradingDayRequest {
-  symbols?:  string[] | CoinSymbols;
-  type?:     string   | ResponseType;
+  symbol?:   string  |  CoinSymbol;
+  type?:     string  |  ResponseType;
   timeZone?: string;
 }
 
@@ -222,26 +197,6 @@ interface AvgPriceData {
   min:       number,  // Average price interval (in minutes)
   price:     string,  // Average price
   closeTime: number   // Last trade time
-}
-
-// deno-fmt-ignore
-const enum Interval {
-  oneSecond      = "1s",
-  oneMinute      = "1m",
-  threeMinutes   = "3m",
-  fiveMinutes    = "5m",
-  fifteenMinutes = "15m",
-  thirtyMinutes  = "30m",
-  oneHour        = "1h",
-  twoHours       = "2h",
-  fourHours      = "4h",
-  sixHours       = "6h",
-  eightHours     = "8h",
-  twelveHours    = "12h",
-  oneDay         = "1d",
-  threeDays      = "3d",
-  oneWeek        = "1w",
-  oneMonth       = "1M"
 }
 
 // deno-fmt-ignore

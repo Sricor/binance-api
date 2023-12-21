@@ -1,7 +1,8 @@
+//deno-fmt-ignore
 export const enum ErrorType {
-  Err = "Err",
-  RequestErr = "RequestErr",
-  BinanceHttpApiErr = "BinanceHttpApiErr",
+  Err               = "Error",
+  RequestErr        = "RequestError",
+  BinanceHttpApiErr = "BinanceHttpApiError",
 }
 
 export interface Error {
@@ -22,30 +23,23 @@ export interface Result<T, Error> {
 }
 
 export interface HttpClient {
-  get(req: RequestParams): Promise<Result<Response, Error>>;
-  post(req: RequestParams): Promise<Result<Response, Error>>;
-}
-
-export interface HttpApi<T, Error> {
-  request(req: object): Promise<Result<T, Error>>;
-}
-
-export interface BinanceHttpClient extends HttpClient {
-  process<T>(resp: Result<Response, Error>): Promise<Result<T, Error>>;
+  toJson(resp: Response): Promise<Result<Response, Error>>;
+  urlEncode(params: Record<string, string | number | boolean>): string;
+  request(path: string, init?: RequestInit): Promise<Result<Response, Error>>;
 }
 
 // deno-lint-ignore no-empty-interface
-export interface BinanceHttpApi<T, Error> extends HttpApi<T, Error> {}
+export interface HttpApi<T, Error> {}
 
-export type RequestParams = {
-  path: string;
-  params?: { [key: string]: string };
-  headers?: HeadersInit;
-  body?: BodyInit;
-};
+export interface BinanceHttpClient extends HttpClient {
+  process<T>(resp: Result<Response, Error>): Promise<Result<T, Error>>;
+  request(
+    path: string,
+    init?: RequestInit,
+    apit?: { key?: boolean; sign?: boolean },
+  ): Promise<Result<Response, Error>>;
+}
 
-export type CoinSymbols = string[] | CoinSymbol[];
-export enum CoinSymbol {
-  BTCUSDT = "BTCUSDT",
-  ETHUSDT = "ETHUSDT",
+export interface BinanceHttpApi<T, Error> extends HttpApi<T, Error> {
+  request(req: object): Promise<Result<T, Error>>;
 }

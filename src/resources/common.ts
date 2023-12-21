@@ -66,3 +66,31 @@ export class Error implements Err {
     return err;
   }
 }
+
+export class DigestMessage {
+  static async hmacSha256(key: string, message: string) {
+    const keyArr = toUnit8Array(String(key));
+    const dataArr = toUnit8Array(String(message));
+
+    const hashArray = await crypto.subtle.importKey(
+      "raw",
+      keyArr,
+      { name: "HMAC", hash: { name: "SHA-256" } },
+      false,
+      ["sign", "verify"],
+    )
+      .then((key) => crypto.subtle.sign("HMAC", key, dataArr))
+      .then((signature) => new Uint8Array(signature));
+    return toHexString(hashArray);
+  }
+}
+
+function toUnit8Array(data: string) {
+  return new TextEncoder().encode(String(data));
+}
+
+function toHexString(data: ArrayBuffer) {
+  const u8Arr = Array.from(new Uint8Array(data));
+  const hex = u8Arr.map((b) => b.toString(16).padStart(2, "0")).join("");
+  return hex;
+}
