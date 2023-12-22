@@ -1,6 +1,8 @@
 {
   "importMap": "./deps.json",
-  "tasks": {},
+  "tasks": {
+    "test": "deno test"
+  },
   "fmt": {
     "lineWidth": 100
   }
