@@ -1,7 +1,7 @@
-import { BinanceHttpClient } from "@resources/client.ts";
-import * as API from "@resources/index.ts";
+import { BinanceHttpClient } from "./resources/client.ts";
+import * as API from "./resources/api/index.ts";
 
-interface BinanceConfig {
+export interface BinanceConfig {
   api: string;
 }
 

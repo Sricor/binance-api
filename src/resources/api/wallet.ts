@@ -135,7 +135,7 @@ interface WithdrawHistoryRequest {
     startTime?:       number;
     endTime?:         number;
     recvWindow?:      number;
-    timestamp?:        number;
+    timestamp?:       number;
 }
 
 //deno-fmt-ignore
@@ -163,7 +163,7 @@ interface FundingAssetRequest {
     asset?:            string;  // The asset symbol
     needBtcValuation?: string;  // Whether BTC valuation is needed (true or false)
     recvWindow?:       number;  // The window in milliseconds
-    timestamp?:         number;  // The timestamp of the request
+    timestamp?:        number;  // The timestamp of the request
 }
 
 //deno-fmt-ignore
@@ -181,7 +181,7 @@ interface UserAssetRequest {
     asset?:            string;   // The asset symbol. If empty, it will query all positive assets of the user.
     needBtcValuation?: boolean;  // Whether to return the valuation in BTC
     recvWindow?:       number;   // The window in milliseconds
-    timestamp?:         number;   // The timestamp of the request
+    timestamp?:        number;   // The timestamp of the request
 }
 
 //deno-fmt-ignore
@@ -198,7 +198,7 @@ interface UserAssetData {
 //deno-fmt-ignore
 interface WalletBalanceRequest {
     recvWindow?: number;  // The window in milliseconds
-    timestamp?:   number;  // The timestamp of the request
+    timestamp?:  number;  // The timestamp of the request
 }
 
 //deno-fmt-ignore

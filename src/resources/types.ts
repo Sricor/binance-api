@@ -1,23 +1,23 @@
-// deno-fmt-ignore
-export const enum ErrorType {
-  Err               = "Error",
-  RequestErr        = "RequestError",
-  BinanceHttpApiErr = "BinanceHttpApiError",
-}
+export type ErrorType =
+  | "Error"
+  | "HttpRequestError"
+  | "BinanceHttpApiError";
 
+// deno-fmt-ignore
 export interface Error {
-  readonly type: ErrorType;
-  readonly name: string;
-  readonly message: string;
-  readonly statusCode?: number;
+  readonly type:           ErrorType;
+  readonly name:           string;
+  readonly message:        string;
+  readonly statusCode?:    number;
   readonly binanceApiErr?: Promise<{
+    readonly msg:  string;
     readonly code: number;
-    readonly msg: string;
   }>;
 }
 
+// deno-fmt-ignore
 export interface Result<T, Error> {
-  readonly ok: boolean;
+  readonly ok:     boolean;
   readonly value?: T;
   readonly error?: Error;
 }

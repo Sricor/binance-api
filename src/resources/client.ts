@@ -1,5 +1,5 @@
 import type { BinanceHttpClient as BnClient, HttpClient as Client } from "./types.ts";
-import { DigestMessage, Error, Result } from "@resources/common.ts";
+import { DigestMessage, Error, Result } from "./common.ts";
 
 export interface HttpClientConfig {
   baseUrl: string;
@@ -13,7 +13,7 @@ export class HttpClient implements Client {
     this.baseUrl = config.baseUrl;
   }
 
-  async request(path: string, init?: RequestInit) {
+  public async request(path: string, init?: RequestInit) {
     const url = new URL(path, this.baseUrl);
     try {
       const response = await fetch(url, init);
@@ -63,7 +63,7 @@ export class BinanceHttpClient extends HttpClient implements BnClient {
     this.#secretKey = key;
   }
 
-  async request(path: string, init?: RequestInit, apit?: { key: boolean; sign: boolean }) {
+  public async request(path: string, init?: RequestInit, apit?: { key: boolean; sign: boolean }) {
     if (!init) init = {};
     init.headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -100,7 +100,7 @@ export class BinanceHttpClient extends HttpClient implements BnClient {
     return super.request(path, init);
   }
 
-  async process<T>(resp: Result<Response, Error>): Promise<Result<T, Error>> {
+  public async process<T>(resp: Result<Response, Error>): Promise<Result<T, Error>> {
     if (!resp.ok) {
       return new Result<T, Error>({
         ok: false,

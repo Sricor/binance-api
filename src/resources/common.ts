@@ -1,4 +1,4 @@
-import { Error as Err, ErrorType, Result as Res } from "@resources/types.ts";
+import type { Error as Err, ErrorType, Result as Res } from "./types.ts";
 
 export class Result<T, E extends Err> implements Res<T, E> {
   readonly ok: boolean;
@@ -31,7 +31,7 @@ export class Error implements Err {
   // deno-lint-ignore require-await
   static async create(message?: string): Promise<Error> {
     const err = new Error({
-      type: ErrorType.Err,
+      type: "Error",
       name: "Error",
       message: message || "",
     });
@@ -41,8 +41,8 @@ export class Error implements Err {
   // deno-lint-ignore require-await
   static async createRequestErr(message?: string): Promise<Error> {
     const err = new Error({
-      type: ErrorType.RequestErr,
-      name: "Request Error",
+      type: "HttpRequestError",
+      name: "HTTP Request Error",
       message: message || ``,
     });
     return err;
@@ -57,7 +57,7 @@ export class Error implements Err {
     }
 
     const err = new Error({
-      type: ErrorType.BinanceHttpApiErr,
+      type: "BinanceHttpApiError",
       name: "Binance API Request Error",
       message: message || "",
       binanceApiErr: binanceApiErr,

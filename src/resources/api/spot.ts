@@ -1,5 +1,12 @@
 import type { BinanceHttpApi, BinanceHttpClient, Error } from "../types.ts";
-import { CoinSymbol } from "@resources/api/types.ts";
+import {
+  CoinSymbol,
+  OrderResp,
+  OrderSide,
+  OrderTimeInForce,
+  OrderType,
+  SelfTradePreventionMode,
+} from "./types.ts";
 
 // deno-fmt-ignore
 const enum API {
@@ -39,35 +46,6 @@ export class OrderTest implements BinanceHttpApi<OrderCommissionData, Error> {
     );
   }
 }
-
-type OrderSide =
-  | "BUY"
-  | "SELL";
-
-type OrderType =
-  | "LIMIT"
-  | "MARKET"
-  | "STOP_LOSS"
-  | "STOP_LOSS_LIMIT"
-  | "TAKE_PROFIT"
-  | "TAKE_PROFIT_LIMIT"
-  | "LIMIT_MAKER";
-
-type OrderTimeInForce =
-  | "GTC"
-  | "IOC"
-  | "FOK";
-
-type OrderResp =
-  | "ACK"
-  | "FULL"
-  | "RESULT";
-
-type SelfTradePreventionMode =
-  | "EXPIRE_TAKER"
-  | "EXPIRE_MAKER"
-  | "EXPIRE_BOTH"
-  | "None";
 
 // deno-fmt-ignore
 interface OrderBase {

@@ -1,27 +1,52 @@
 export type CoinSymbols = string[] | CoinSymbol[];
 
-// deno-fmt-ignore
-export enum CoinSymbol {
-  BTCUSDT = "BTCUSDT",
-  ETHUSDT = "ETHUSDT",
-}
+export type CoinSymbol =
+  | "BTCUSDT"
+  | "ETHUSDT";
 
-// deno-fmt-ignore
-export const enum Interval {
-    oneSecond      = "1s",
-    oneMinute      = "1m",
-    threeMinutes   = "3m",
-    fiveMinutes    = "5m",
-    fifteenMinutes = "15m",
-    thirtyMinutes  = "30m",
-    oneHour        = "1h",
-    twoHours       = "2h",
-    fourHours      = "4h",
-    sixHours       = "6h",
-    eightHours     = "8h",
-    twelveHours    = "12h",
-    oneDay         = "1d",
-    threeDays      = "3d",
-    oneWeek        = "1w",
-    oneMonth       = "1M"
-}
+export type Interval =
+  | "1s"
+  | "1m"
+  | "3m"
+  | "5m"
+  | "15m"
+  | "30m"
+  | "1h"
+  | "2h"
+  | "4h"
+  | "6h"
+  | "8h"
+  | "12h"
+  | "1d"
+  | "3d"
+  | "1w"
+  | "1M";
+
+export type OrderSide =
+  | "BUY"
+  | "SELL";
+
+export type OrderType =
+  | "LIMIT"
+  | "MARKET"
+  | "STOP_LOSS"
+  | "STOP_LOSS_LIMIT"
+  | "TAKE_PROFIT"
+  | "TAKE_PROFIT_LIMIT"
+  | "LIMIT_MAKER";
+
+export type OrderTimeInForce =
+  | "GTC"
+  | "IOC"
+  | "FOK";
+
+export type OrderResp =
+  | "ACK"
+  | "FULL"
+  | "RESULT";
+
+export type SelfTradePreventionMode =
+  | "EXPIRE_TAKER"
+  | "EXPIRE_MAKER"
+  | "EXPIRE_BOTH"
+  | "None";
