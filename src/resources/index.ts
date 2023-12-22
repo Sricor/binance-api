@@ -14,3 +14,5 @@ export {
   WalletBalance,
   WithdrawHistory,
 } from "@resources/api/wallet.ts";
+
+export { Order, OrderTest } from "@resources/api/spot.ts";

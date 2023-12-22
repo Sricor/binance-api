@@ -1,4 +1,4 @@
-//deno-fmt-ignore
+// deno-fmt-ignore
 export const enum ErrorType {
   Err               = "Error",
   RequestErr        = "RequestError",

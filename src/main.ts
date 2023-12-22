@@ -22,6 +22,10 @@ export class Binance extends BinanceHttpClient {
       walletBalance:    new API.WalletBalance(this),
       depositHistory:   new API.DepositHistory(this),
       withdrawHistory:  new API.WithdrawHistory(this),
+    },
+    spot: {
+      order:            new API.Order(this),
+      orderTest:        new API.OrderTest(this)
     }
   };
 
