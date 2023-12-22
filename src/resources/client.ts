@@ -64,6 +64,12 @@ export class BinanceHttpClient extends HttpClient implements BnClient {
   }
 
   async request(path: string, init?: RequestInit, apit?: { key: boolean; sign: boolean }) {
+    if (!init) init = {};
+    init.headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...init.headers,
+    };
+
     if (apit?.sign) {
       if (!this.#secretKey) {
         return new Result<Response, Error>({
@@ -85,8 +91,10 @@ export class BinanceHttpClient extends HttpClient implements BnClient {
           error: await Error.create(`Not Provided Api Key.`),
         });
       }
-      if (!init) init = {};
-      init.headers = { "X-MBX-APIKEY": this.#apiKey, ...init.headers };
+      init.headers = {
+        "X-MBX-APIKEY": this.#apiKey,
+        ...init.headers,
+      };
     }
 
     return super.request(path, init);
