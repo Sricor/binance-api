@@ -1,4 +1,12 @@
-export { AvgPrice, BookTicker, Klines, Price, RoundPriceChange, TradingDay } from "./market.ts";
+export {
+  AvgPrice,
+  BookTicker,
+  ExchangeInfo,
+  Klines,
+  Price,
+  RoundPriceChange,
+  TradingDay,
+} from "./market.ts";
 
 export {
   DepositHistory,
@@ -8,4 +16,4 @@ export {
   WithdrawHistory,
 } from "./wallet.ts";
 
-export { Order, OrderTest } from "./spot.ts";
+export { Order, OrderTest, OrderTracking } from "./spot.ts";

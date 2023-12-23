@@ -3,6 +3,7 @@ import {
   CoinSymbol,
   OrderResp,
   OrderSide,
+  OrderStatus,
   OrderTimeInForce,
   OrderType,
   SelfTradePreventionMode,
@@ -47,18 +48,34 @@ export class OrderTest implements BinanceHttpApi<OrderCommissionData, Error> {
   }
 }
 
+export class OrderTracking implements BinanceHttpApi<OrderTrackingData, Error> {
+  constructor(protected client: BinanceHttpClient) {}
+
+  public async request(params: OrderTrackingRequest) {
+    type Response = OrderTrackingData;
+    params = { timestamp: new Date().getTime(), ...params };
+    return await this.client.process<Response>(
+      await this.client.request(
+        `${API.Order}${this.client.urlEncode({ ...params })}`,
+        { method: "GET" },
+        { key: true, sign: true },
+      ),
+    );
+  }
+}
+
 // deno-fmt-ignore
 interface OrderBase {
   symbol:                   CoinSymbol;
   side:                     OrderSide;
   type:                     OrderType;
-  quantity?:                number;
-  quoteOrderQty?:           number;
-  price?:                   number;
+  quantity?:                string;
+  quoteOrderQty?:           string;
+  price?:                   string;
   newClientOrderId?:        string;
   strategyId?:              number;
   strategyType?:            number;
-  stopPrice?:               number;
+  stopPrice?:               string;
   trailingDelta?:           number;
   icebergQty?:              number;
   newOrderRespType?:        OrderResp;
@@ -71,31 +88,31 @@ interface OrderBase {
 // deno-fmt-ignore
 interface LimitOrderRequest extends OrderBase {
   type:        "LIMIT";
-  price:       number;
-  quantity:    number;
+  price:       string;
+  quantity:    string;
   timeInForce: OrderTimeInForce;
 }
 
 // deno-fmt-ignore
 interface MarketOrderRequest extends OrderBase {
   type:     "MARKET";
-  quantity: number;
+  quantity: string;
 }
 
 // deno-fmt-ignore
 interface StopLossOrderRequest extends OrderBase {
   type:          "STOP_LOSS";
-  quantity:      number;
-  stopPrice:     number;
+  quantity:      string;
+  stopPrice:     string;
   trailingDelta: number;
 }
 
 // deno-fmt-ignore
 interface StopLossLimitOrderRequest extends OrderBase {
   type:         "STOP_LOSS_LIMIT";
-  quantity:      number;
-  price:         number;
-  stopPrice:     number;
+  quantity:      string;
+  price:         string;
+  stopPrice:     string;
   trailingDelta: number;
   timeInForce:   OrderTimeInForce;
 }
@@ -103,17 +120,17 @@ interface StopLossLimitOrderRequest extends OrderBase {
 // deno-fmt-ignore
 interface TakeProfitOrderRequest extends OrderBase {
   type:         "TAKE_PROFIT";
-  quantity:      number;
-  stopPrice:     number;
+  quantity:      string;
+  stopPrice:     string;
   trailingDelta: number;
 }
 
 // deno-fmt-ignore
 interface TakeProfitLimitOrderRequest extends OrderBase {
   type:          "TAKE_PROFIT_LIMIT";
-  quantity:      number;
-  price:         number;
-  stopPrice:     number;
+  quantity:      string;
+  price:         string;
+  stopPrice:     string;
   trailingDelta: number;
   timeInForce:   OrderTimeInForce;
 }
@@ -121,8 +138,8 @@ interface TakeProfitLimitOrderRequest extends OrderBase {
 // deno-fmt-ignore
 interface LimitMakerOrderRequest extends OrderBase {
   type:     "LIMIT_MAKER";
-  quantity: number;
-  price:    number;
+  quantity: string;
+  price:    string;
 }
 
 type OrderRequest =
@@ -167,6 +184,39 @@ interface OrderResultData {
   trailingTime?:           number;
   usedSor?:                boolean;
   workingFloor?:           string;
+}
+
+// deno-fmt-ignore
+interface OrderTrackingRequest {
+  symbol:             CoinSymbol; // trading pair (required)
+  orderId?:           number;     // system order ID (required)
+  origClientOrderId?: string;     // original client order ID (optional)
+  recvWindow?:        number;     // receive window (optional, must not be greater than 60000)
+  timestamp?:         number;     // timestamp (required)
+}
+
+// deno-fmt-ignore
+interface OrderTrackingData {
+  symbol:                  CoinSymbol;              // trading pair
+  type:                    OrderType;               // order type, such as market order, limit order, etc.
+  side:                    OrderSide;               // order side, buy or sell  
+  status:                  OrderStatus;             // order status
+  orderId:                 number;                  // system order ID
+  orderListId:             number;                  // OCO order ID, otherwise -1
+  clientOrderId:           string;                  // client's own ID
+  price:                   string;                  // order price
+  origQty:                 string;                  // original order quantity set by user
+  executedQty:             string;                  // quantity of the order that has been executed
+  cummulativeQuoteQty:     string;                  // cumulative amount of the order
+  stopPrice:               string;                  // stop price
+  icebergQty:              string;                  // iceberg quantity
+  time:                    number;                  // order time
+  updateTime:              number;                  // last update time
+  isWorking:               boolean;                 // whether the order is on the order book
+  workingTime:             number;                  // working time of the order
+  origQuoteOrderQty:       string;                  // original quote order quantity
+  timeInForce:             OrderTimeInForce;        // time in force for the order
+  selfTradePreventionMode: SelfTradePreventionMode; // self-trade prevention mode
 }
 
 // deno-fmt-ignore

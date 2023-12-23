@@ -14,6 +14,7 @@ export class Binance extends BinanceHttpClient {
       avgPrice:         new API.AvgPrice(this),
       tradingDay:       new API.TradingDay(this),
       bookTicker:       new API.BookTicker(this),
+      exchangeInfo:     new API.ExchangeInfo(this),
       roundPriceChange: new API.RoundPriceChange(this),
     },
     wallet: {
@@ -25,7 +26,8 @@ export class Binance extends BinanceHttpClient {
     },
     spot: {
       order:            new API.Order(this),
-      orderTest:        new API.OrderTest(this)
+      orderTest:        new API.OrderTest(this),
+      orderTracking:    new API.OrderTracking(this)
     }
   };
 
